@@ -95,6 +95,30 @@ func (c *CrossrefHarvester) WriteDaySlice(t time.Time, dir string, prefix string
 	return cachePath, nil
 }
 
+func (c *CrossrefHarvester) WriteDaySliceUncompressed(t time.Time, dir string, prefix string) (string, error) {
+	// hacking this in for now
+	start := now.With(t).BeginningOfDay()
+	end := now.With(t).EndOfDay()
+	fn := fmt.Sprintf("%s%s-%s.ndjson",
+		prefix,
+		c.ApiFilter,
+		start.Format("2006-01-02"))
+	cachePath := path.Join(dir, fn)
+	if _, err := os.Stat(cachePath); os.IsNotExist(err) {
+		f, err := atomicfile.New(cachePath)
+		if err != nil {
+			return "", err
+		}
+		if err := c.WriteSlice(f, start, end); err != nil {
+			return "", err
+		}
+		if err := f.Close(); err != nil {
+			return "", err
+		}
+	}
+	return cachePath, nil
+}
+
 // addOptionalEmail appends mailto parameter.
 func (c *CrossrefHarvester) addOptionalEmail(vs url.Values) {
 	if c.ApiEmail != "" {

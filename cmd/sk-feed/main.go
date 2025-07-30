@@ -223,19 +223,16 @@ func main() {
 			var processedFiles []string // collect files for S3 upload
 			for _, iv := range ivs {
 
-				filename := fmt.Sprintf("%s%s.ndjson", config.CrossrefFeedPrefix, iv.Start.Format("2006-01-02"))
-				filepath := path.Join(dstDir, filename)
-
 				// TODO: we only need the start date, because we limit
 				// ourselves to day slices
-				cacheFile, err := ch.WriteDaySlice(iv.Start, dstDir, config.CrossrefFeedPrefix)
+				cacheFile, err := ch.WriteDaySliceUncompressed(iv.Start, dstDir, config.CrossrefFeedPrefix)
 				if err != nil {
 					log.Fatalf("crossref day slice: %v", err)
 				}
 
 				if *crossrefUploadToS3 {
 					if _, err := os.Stat(cacheFile); err == nil {
-						processedFiles = append(processedFiles, filepath)
+						processedFiles = append(processedFiles, cacheFile)
 					}
 				}
 			}
