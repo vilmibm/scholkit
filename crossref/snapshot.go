@@ -105,7 +105,7 @@ func DefaultSnapshotOptions() SnapshotOptions {
 }
 
 // CreateSnapshot implements a three-stage metadata snapshot approach, given
-// snapshot options. Tihs allows to create a current view of crossref our of a
+// snapshot options. This allows to create a current view of crossref our of a
 // continously harvested set of files.
 //
 // On a machine with fast i/o, many parts of this process can be cpu bound,

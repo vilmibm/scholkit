@@ -63,7 +63,7 @@ func (wr *WorksResponse) IsLast() bool {
 
 // WriteDaySlice is a helper function to atomically write crossref data for a
 // single day to file on disk under dir. Idempotent, once the data has been
-// captured. TODO: add compression.
+// captured.
 func (c *CrossrefHarvester) WriteDaySlice(t time.Time, dir string, prefix string) (string, error) {
 	start := now.With(t).BeginningOfDay()
 	end := now.With(t).EndOfDay()

@@ -367,10 +367,12 @@ func main() {
 
 func uploadFileToS3(localPath, rcloneRemote, bucket, s3Prefix string) error {
 	filename := path.Base(localPath)
-	s3Path := fmt.Sprintf("%s:%s/%s%s", rcloneRemote, bucket, s3Prefix, filename)
+	//s3Path := fmt.Sprintf("%s:%s/%s%s", rcloneRemote, bucket, s3Prefix, filename)
+	s3Path := fmt.Sprintf("%s:%s/%s", rcloneRemote, bucket, filename)
 
 	cmd := exec.Command("rclone", "copy", localPath, s3Path)
 
+	log.Printf("exec: `rclone copy %s %s`", localPath, s3Path)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
 		return fmt.Errorf("rclone copy failed: %v, output: %s", err, output)
