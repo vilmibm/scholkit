@@ -370,8 +370,7 @@ func main() {
 
 func uploadFileToS3(localPath, rcloneRemote, bucket, s3Prefix string) error {
 	filename := path.Base(localPath)
-	//s3Path := fmt.Sprintf("%s:%s/%s%s", rcloneRemote, bucket, s3Prefix, filename)
-	s3Path := fmt.Sprintf("%s:%s/%s", rcloneRemote, bucket, filename)
+	s3Path := fmt.Sprintf("%s:%s/%s%s", rcloneRemote, bucket, s3Prefix, filename)
 
 	cmd := exec.Command("rclone", "copy", localPath, s3Path)
 
