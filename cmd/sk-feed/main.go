@@ -99,6 +99,7 @@ var (
 	maxRetries  = flag.Int("r", 3, "max retries")
 	timeout     = flag.Duration("T", oneHour, "connectiont timeout")
 	showVersion = flag.Bool("version", false, "show version")
+	limit       = flag.Int("limit", -1, "max number of items retrieved in daily metadata pull")
 	// rclone is used for openalex
 	rcloneTransfers = flag.Int("rclone-transfers", 8, "number of parallel transfers for rclone")
 	rcloneCheckers  = flag.Int("rclone-checkers", 16, "number of parallel checkers for rclone")
@@ -152,6 +153,7 @@ func main() {
 		Date:               date,
 		MaxRetries:         *maxRetries,
 		Timeout:            *timeout,
+		Limit:              *limit,
 		CrossrefApiEmail:   *crossrefApiEmail,
 		CrossrefApiFilter:  *crossrefApiFilter,
 		CrossrefUserAgent:  *crossrefUserAgent,
@@ -210,6 +212,7 @@ func main() {
 				ApiFilter:           config.CrossrefApiFilter,
 				ApiEmail:            config.CrossrefApiEmail,
 				Rows:                1000,
+				Limit:               config.Limit,
 				UserAgent:           config.CrossrefUserAgent,
 				AcceptableMissRatio: 0.1,
 				MaxRetries:          3,

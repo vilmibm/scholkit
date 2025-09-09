@@ -25,6 +25,8 @@ type Config struct {
 	MaxRetries int
 	// Timeout is a generic operation timeout.
 	Timeout time.Duration
+	// Limit constrains the number of items retrieved in a daily metadata pull
+	Limit int
 	// CrossrefApiEmail is an email address sent with every request, as suggested by the crossref rest API.
 	CrossrefApiEmail string
 	// CrossrefUserAgent is the user agent sent to the crossref API.

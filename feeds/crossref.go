@@ -26,6 +26,7 @@ type CrossrefHarvester struct {
 	ApiFilter           string
 	ApiEmail            string
 	Rows                int
+	Limit               int
 	UserAgent           string
 	MaxRetries          int
 	AcceptableMissRatio float64 // recommended: 0.1
@@ -194,6 +195,12 @@ func (c *CrossrefHarvester) WriteSlice(w io.Writer, from, until time.Time) error
 		c.logSeenRatio(seen, &wr)
 		if wr.IsLast() || seen >= int(wr.Message.TotalResults) {
 			log.Printf("crossref slice done: seen=%d, total=%d", seen, wr.Message.TotalResults)
+			return nil
+		}
+		if seen >= c.Limit {
+			log.Printf(
+				"crossref: hit or exceeded item limit: limit=%d seen=%d total=%d",
+				c.Limit, seen, wr.Message.TotalResults)
 			return nil
 		}
 		vs = url.Values{}
