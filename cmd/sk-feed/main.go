@@ -245,9 +245,11 @@ func main() {
 				}
 				log.Printf("uploading %d crossref files to S3...", len(processedFiles))
 				for _, filepath := range processedFiles {
-					if err := uploadFileToS3(filepath, *crossrefS3RcloneRemote, *crossrefS3Bucket, *crossrefS3Prefix); err != nil {
+					s3Key, err := uploadFileToS3(filepath, *crossrefS3RcloneRemote, *crossrefS3Bucket, *crossrefS3Prefix)
+					if err != nil {
 						log.Fatalf("failed to upload %s to S3: %v", filepath, err)
 					}
+					fmt.Println(s3Key)
 					log.Printf("uploaded: %s", filepath)
 				}
 
@@ -368,17 +370,18 @@ func main() {
 	}
 }
 
-func uploadFileToS3(localPath, rcloneRemote, bucket, s3Prefix string) error {
+func uploadFileToS3(localPath, rcloneRemote, bucket, s3Prefix string) (string, error) {
 	filename := path.Base(localPath)
-	s3Path := fmt.Sprintf("%s:%s/%s%s", rcloneRemote, bucket, s3Prefix, filename)
+	s3Key := fmt.Sprintf("%s/%s%s", bucket, s3Prefix, filename)
+	s3Path := fmt.Sprintf("%s:%s", rcloneRemote, s3Key)
 
 	cmd := exec.Command("rclone", "copy", localPath, s3Path)
 
 	log.Printf("exec: `rclone copy %s %s`", localPath, s3Path)
 	output, err := cmd.CombinedOutput()
 	if err != nil {
-		return fmt.Errorf("rclone copy failed: %v, output: %s", err, output)
+		return "", fmt.Errorf("rclone copy failed: %v, output: %s", err, output)
 	}
 
-	return nil
+	return s3Key, nil
 }
