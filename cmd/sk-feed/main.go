@@ -375,7 +375,7 @@ func uploadFileToS3(localPath, rcloneRemote, bucket, s3Prefix string) (string, e
 	s3Key := fmt.Sprintf("%s/%s%s", bucket, s3Prefix, filename)
 	s3Path := fmt.Sprintf("%s:%s", rcloneRemote, s3Key)
 
-	cmd := exec.Command("rclone", "copy", localPath, s3Path)
+	cmd := exec.Command("rclone", "copyto", localPath, s3Path)
 
 	log.Printf("exec: `rclone copy %s %s`", localPath, s3Path)
 	output, err := cmd.CombinedOutput()
